@@ -1,0 +1,31 @@
+$TTL 1W
+@	IN	SOA	ns1.{{ dns.clusterid }}.{{ dns.domain }}.	root (
+			{{ serialnumber }}	; serial
+			3H		; refresh (3 hours)
+			30M		; retry (30 minutes)
+			2W		; expiry (2 weeks)
+			1W )		; minimum (1 week)
+	IN	NS	ns1.{{ dns.clusterid }}.{{ dns.domain }}.
+	IN	MX 10	smtp.{{ dns.clusterid }}.{{ dns.domain }}.
+;
+; 
+ns1	IN	A	{{ bastion.ipaddr }}
+smtp	IN	A	{{ bastion.ipaddr }}
+;
+{{ bastion.name }}	IN	A	{{ bastion.ipaddr }}
+{{ bastion.name }}	IN	A	{{ bastion.ipaddr }}
+;
+; Create entry for the bootstrap host
+{{ bootstrap.name }}	IN	A	{{ bootstrap.ipaddr }}
+;
+; Create entries for the master hosts
+{% for m in masters %}
+{{ m.name }}		IN	A	{{ m.ipaddr }}
+{% endfor %}
+;
+; Create entries for the worker hosts
+{% for w in workers %}
+{{ w.name }}		IN	A	{{ w.ipaddr }}
+{% endfor %}
+;
+;EOF
